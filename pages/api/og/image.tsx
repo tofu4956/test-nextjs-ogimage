@@ -6,6 +6,7 @@ import '../../component/ogTemplate'
 import {htmlStyle} from '../../component/ogTemplate'
 import type { NextApiRequest, NextApiResponse } from "next";
 
+const isDev = process.env.NODE_ENV !== 'production';
 
 const Image = async (
   req: NextApiRequest,
@@ -15,10 +16,9 @@ const Image = async (
   const browser = await puppeteer.launch({
     args: chromium.args,
     defaultViewport: { width: 1200, height: 675},
-    executablePath: "/home/murasame/test/test-nextjs-ogimage/node_modules/puppeteer/.local-chromium/linux-961656/chrome-linux/chrome",
+    executablePath: isDev ? "/home/murasame/test/test-nextjs-ogimage/node_modules/puppeteer/.local-chromium/linux-961656/chrome-linux/chrome" : await chromium.executablePath,
     headless: chromium.headless,
   })
-  console.log('b')
   const page = await browser.newPage()
   await page.setContent(htmlStyle , { waitUntil: "domcontentloaded" })
   const buffer = await page.screenshot({ type: "png" })
